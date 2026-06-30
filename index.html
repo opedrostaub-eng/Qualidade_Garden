@@ -206,7 +206,7 @@
   .apt-card.collapsed .apt-card-body{display:none;}
 
   .apt-card-body{padding:12px; border-top:1px solid var(--line); background:#fff;}
-  .apt-empty-actions{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+
   .btn{
     font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.04em;
     border-radius:var(--radius); padding:7px 12px; cursor:pointer; border:1px solid var(--line); background:#fff; color:var(--ink);
@@ -214,44 +214,88 @@
   .btn:hover{background:var(--paper-2);}
   .btn-ok{border-color:var(--ok); color:var(--ok);}
   .btn-ok:hover{background:var(--ok-bg);}
-  .btn-add{border-color:var(--orange); color:var(--orange);}
-  .btn-add:hover{background:var(--orange-dim);}
+  .btn-add{border-color:var(--orange); color:var(--orange); background:var(--orange); color:#fff; border-color:var(--orange);}
+  .btn-add:hover{background:#E64E16;}
   .btn-ghost{border:none; background:none; color:#8A93A1; padding:4px 6px;}
   .btn-ghost:hover{color:var(--bad); background:none;}
 
+  /* ---------- REGISTRATION FORM (sempre visível no topo da unidade) ---------- */
+  .apt-register{
+    border:1px solid var(--brand); border-radius:var(--radius); background:var(--brand-bg);
+    padding:12px; margin-bottom:14px;
+  }
+  .reg-label{
+    font-family:'IBM Plex Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.08em;
+    color:var(--brand-dark); font-weight:600; margin-bottom:8px; display:block;
+  }
+  .reg-grid{display:flex; gap:10px; align-items:flex-start; flex-wrap:wrap;}
+  .reg-desc{
+    flex:1; min-width:220px; min-height:54px; border:1px solid var(--line); border-radius:var(--radius);
+    padding:8px 9px; font-family:'Inter',sans-serif; font-size:13px; resize:vertical; background:#fff;
+  }
+  .reg-severity{
+    flex:0 0 150px; border:1px solid var(--line); border-radius:var(--radius);
+    padding:8px 9px; font-family:'Inter',sans-serif; font-size:13px; font-weight:600; cursor:pointer; background:#fff;
+    align-self:stretch;
+  }
+  .reg-desc:focus, .reg-severity:focus{outline:2px solid var(--brand); outline-offset:0;}
+  .reg-actions{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:10px;}
+  .reg-photo-cell{display:flex; align-items:center; gap:8px;}
+  .reg-photo-cell .img-preview{width:54px; height:40px;}
+  .btn-register{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:.04em;
+    border-radius:var(--radius); padding:9px 16px; cursor:pointer; border:1px solid var(--brand-dark);
+    background:var(--brand-dark); color:#fff; margin-left:auto;
+  }
+  .btn-register:hover{background:var(--brand);}
+  .reg-conforme-row{margin-top:10px; padding-top:10px; border-top:1px dashed #BFE0CC;}
+  .btn-link-ok{
+    border:none; background:none; color:var(--ok); font-family:'IBM Plex Mono',monospace; font-size:11px;
+    text-transform:uppercase; letter-spacing:.04em; cursor:pointer; padding:0; text-decoration:underline;
+  }
+  .btn-link-ok:hover{color:#1E5E3D;}
+
+  /* ---------- LISTA CRONOLÓGICA DE APONTAMENTOS ---------- */
   .issues-wrap{display:flex; flex-direction:column; gap:10px;}
-  .issue-row{
-    border:1px solid var(--line); border-radius:var(--radius); padding:10px; background:var(--paper);
+  .issues-empty{
+    font-size:12px; color:#8A93A1; font-style:italic; padding:6px 2px;
   }
-  .issue-row.is-done{border-color:var(--done); background:#FBFDFF;}
-  .issue-top{display:flex; align-items:flex-start; gap:10px; margin-bottom:8px;}
-  .issue-num{
-    font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8A93A1; margin-bottom:4px; display:block;
+  .issue-card{
+    border:1px solid var(--line); border-radius:var(--radius); padding:11px; background:var(--paper);
   }
-  select.status-select{
-    width:100%; border:1px solid var(--line); border-radius:var(--radius);
-    padding:6px 8px; font-family:'Inter',sans-serif; font-size:12.5px; font-weight:600; cursor:pointer;
+  .issue-card.is-done{border-color:var(--done); background:#FBFDFF;}
+  .issue-card-head{display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap;}
+  .issue-id{
+    font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:12px; color:var(--blueprint);
+    background:var(--paper-2); padding:2px 7px; border-radius:10px;
   }
-  .issue-top .issue-meta{width:150px; flex:0 0 150px;}
-  .issue-top .issue-desc{flex:1;}
-  textarea.desc-input{
-    width:100%; min-height:42px; border:1px solid var(--line); border-radius:var(--radius);
-    padding:6px 8px; font-family:'Inter',sans-serif; font-size:12.5px; resize:vertical;
+  .sev-badge{
+    font-size:10.5px; font-weight:700; padding:3px 9px; border-radius:10px; font-family:'IBM Plex Mono',monospace;
+    text-transform:uppercase; letter-spacing:.03em;
   }
-  textarea.desc-input:focus, select.status-select:focus, input:focus{outline:2px solid var(--orange); outline-offset:0;}
+  .sev-atencao{background:var(--warn-bg); color:#8A5C0F;}
+  .sev-nao_conforme{background:var(--bad-bg); color:#8C2828;}
+  .done-badge{
+    display:inline-flex; align-items:center; gap:5px; font-size:10.5px; font-weight:600; color:var(--done);
+    background:var(--done-bg); padding:3px 9px; border-radius:10px; font-family:'IBM Plex Mono',monospace;
+  }
+  .issue-card-head .spacer{flex:1;}
   .remove-issue{
-    border:none; background:none; color:#B8BFC9; font-size:16px; cursor:pointer; line-height:1; padding:4px; flex:0 0 auto;
+    border:none; background:none; color:#B8BFC9; font-size:17px; cursor:pointer; line-height:1; padding:2px 4px;
   }
   .remove-issue:hover{color:var(--bad);}
+  .issue-desc-text{margin:0 0 10px; font-size:13px; color:var(--ink); white-space:pre-wrap;}
+  .issue-desc-text.empty{color:#A6AEBA; font-style:italic;}
 
-  .issue-bottom{display:flex; gap:10px; flex-wrap:wrap; align-items:flex-start; border-top:1px dashed var(--line); padding-top:9px;}
+  .issue-photos{display:flex; gap:14px; flex-wrap:wrap; border-top:1px dashed var(--line); padding-top:10px; margin-bottom:10px;}
   .photo-cell{display:flex; flex-direction:column; align-items:center; gap:5px;}
   .photo-cell-label{font-family:'IBM Plex Mono',monospace; font-size:9px; color:#8A93A1; text-transform:uppercase; letter-spacing:.05em;}
   .img-cell{display:flex; flex-direction:column; align-items:center; gap:5px;}
   .img-preview{
-    width:78px; height:54px; object-fit:cover; border-radius:var(--radius); border:1px solid var(--line); display:none; background:var(--paper-2);
+    width:96px; height:68px; object-fit:cover; border-radius:var(--radius); border:1px solid var(--line); display:none; background:var(--paper-2);
   }
-  .img-preview.has-img{display:block;}
+  .img-preview.has-img{display:block; cursor:zoom-in;}
+  .img-preview.has-img:hover{outline:2px solid var(--brand); outline-offset:1px;}
   .img-btn{
     font-family:'IBM Plex Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.04em;
     background:var(--paper-2); border:1px solid var(--line); border-radius:var(--radius);
@@ -261,33 +305,56 @@
   .img-btn.final{border-color:var(--done); color:var(--done);}
   .img-btn.final:hover{background:var(--done-bg);}
 
-  .done-toggle{
-    display:flex; align-items:center; gap:7px; font-family:'IBM Plex Mono',monospace; font-size:11px;
-    color:var(--ink); cursor:pointer; user-select:none; flex:0 0 auto; padding-top:2px;
+  .issue-card-actions{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .btn-done{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.04em;
+    border-radius:var(--radius); padding:7px 13px; cursor:pointer; border:1px solid var(--done); background:var(--done); color:#fff;
   }
-  .done-toggle input{width:15px; height:15px; accent-color:var(--done); cursor:pointer;}
-  .done-toggle.checked{color:var(--done); font-weight:600;}
-
-  .issue-actions{display:flex; align-items:center; gap:8px; margin-left:auto; flex:0 0 auto; align-self:flex-end;}
+  .btn-done:hover{background:#2257A3;}
+  .btn-undo{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.04em;
+    border-radius:var(--radius); padding:7px 13px; cursor:pointer; border:1px solid var(--line); background:#fff; color:#5A6473;
+  }
+  .btn-undo:hover{background:var(--paper-2);}
   .btn-save-issue{
     font-family:'IBM Plex Mono',monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.04em;
-    border-radius:var(--radius); padding:6px 10px; cursor:pointer; border:1px solid var(--blueprint); background:var(--blueprint); color:#fff;
+    border-radius:var(--radius); padding:7px 12px; cursor:pointer; border:1px solid var(--blueprint); background:var(--blueprint); color:#fff;
   }
   .btn-save-issue:hover{background:var(--blueprint-2);}
   .save-confirm{font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--ok); opacity:0; transition:opacity .25s;}
   .save-confirm.show{opacity:1;}
-  .done-badge{
-    display:inline-flex; align-items:center; gap:5px; font-size:10.5px; font-weight:600; color:var(--done);
-    background:var(--done-bg); padding:2px 8px; border-radius:10px; font-family:'IBM Plex Mono',monospace;
+  .require-photo-hint{
+    font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--bad); width:100%;
   }
 
-  .add-issue-bar{margin-top:10px; display:flex; gap:8px;}
+  .apt-footer-actions{margin-top:10px; display:flex; gap:8px;}
 
   .empty-floor{padding:40px 16px; text-align:center; color:#8A93A1;}
   .empty-floor .disp{font-size:20px; color:var(--ink);}
 
   footer{
     text-align:center; padding:18px; font-size:11px; color:#8A93A1; font-family:'IBM Plex Mono',monospace;
+  }
+
+  /* ---------- LIGHTBOX (zoom de imagem) ---------- */
+  .lightbox-overlay{
+    position:fixed; inset:0; background:rgba(10,14,22,.9); display:none;
+    align-items:center; justify-content:center; z-index:9999; padding:36px;
+  }
+  .lightbox-overlay.open{display:flex;}
+  .lightbox-img{
+    max-width:92vw; max-height:88vh; border-radius:4px; box-shadow:0 12px 48px rgba(0,0,0,.55);
+    cursor:default; background:#fff;
+  }
+  .lightbox-close{
+    position:fixed; top:20px; right:26px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.35);
+    color:#fff; width:38px; height:38px; border-radius:50%; font-size:17px; cursor:pointer; z-index:10000;
+    display:flex; align-items:center; justify-content:center; font-family:'Inter',sans-serif;
+  }
+  .lightbox-close:hover{background:rgba(255,255,255,.26);}
+  .lightbox-caption{
+    position:fixed; bottom:22px; left:0; right:0; text-align:center; color:#D6DBE3;
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.04em; z-index:10000; pointer-events:none;
   }
 
   ::-webkit-scrollbar{width:9px; height:9px;}
@@ -382,6 +449,13 @@
 
 <footer>checklist de vistoria · dados salvos automaticamente e compartilhados entre todos que acessam este link</footer>
 
+<!-- ===== LIGHTBOX (zoom de imagem) ===== -->
+<div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightbox(event)">
+  <button class="lightbox-close" onclick="closeLightbox(event)" title="Fechar (Esc)">✕</button>
+  <img class="lightbox-img" id="lightboxImg" src="" onclick="event.stopPropagation()">
+  <div class="lightbox-caption" id="lightboxCaption"></div>
+</div>
+
 <script>
 /* ============ DADOS DO EDIFÍCIO ============ */
 const FLOORS = {"21":["2101","2102","2103","2104","2105","2106","2107","2108"],"20":["2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016"],"19":["1901","1902","1903","1904","1905","1906","1907","1908","1909","1910","1911","1912","1913","1914","1915","1916"],"18":["1801","1802","1803","1804","1805","1806","1807","1808","1809","1810","1811","1812","1813","1814","1815","1816"],"17":["1703","1704","1705","1706","1707","1708","1709","1710","1711","1712","1713","1714","1715","1716"],"16":["1603","1604","1605","1606","1607","1608","1609","1610","1611","1612","1613","1614","1615","1616"],"15":["1501","1502","1503","1504","1505","1506","1507","1508","1509","1510","1511","1512","1513","1514","1515","1516"],"14":["1401","1402","1403","1404","1405","1406","1407","1408","1409","1410","1411","1412","1413","1414"],"13":["1301","1302","1303","1304","1305","1306","1307","1308","1309","1310","1311","1312","1313","1314"],"12":["1201","1202","1203","1204","1205","1206","1207","1208","1209","1210","1211","1212","1213","1214","1215","1216"],"11":["1101","1102","1103","1104","1105","1106","1109","1110","1111","1112","1113","1114","1115","1116"],"10":["1001","1002","1003","1004","1005","1006","1009","1010","1011","1012","1013","1014","1015","1016"],"9":["0901","0902","0903","0904","0905","0906","0907","0908","0909","0910","0911","0912","0913","0914","0915","0916"],"7":["0701","0702","0703","0704","0705","0706","0707","0708","0709","0710","0711","0712","0713","0714","0715","0716"],"6":["0601","0602","0603","0604","0605","0606","0607","0608","0611","0612","0613","0614","0615","0616"],"5":["0501","0502","0503","0504","0505","0506","0507","0508","0511","0512","0513","0514","0515","0516"],"4":["0401","0402","0403","0404","0405","0406","0407","0408","0409","0410","0411","0412","0413","0414","0415","0416"],"3":["0301","0302","0303","0304","0305","0306","0307","0308","0309","0310","0311","0312","0313","0314","0315","0316"]};
@@ -395,14 +469,17 @@ const STATUS = {
   "nao_vistoriado":{label:"Não vistoriado",  color:"var(--grey)", bg:"var(--grey-bg)", text:"#5A6473"}
 };
 const STATUS_ORDER = ["conforme","atencao","nao_conforme","nao_vistoriado"];
+const SEV_LABEL = {"atencao":"Atenção","nao_conforme":"Não conforme"};
 
 /* ============ ESTADO ============ */
-let DATA = { meta:{building:"",resp:"",date:""}, apartments:{} }; // apartments[code] = {visited, issues:[{id,severity,desc,img,createdAt}], updatedAt}
+let DATA = { meta:{building:"",resp:"",date:""}, apartments:{} };
+// apartments[code] = {visited, issueSeq, issues:[{id,num,severity,desc,img,completed,resultImg,completedAt,createdAt}], updatedAt}
 let currentFloor = null;
 let saveTimer = null;
 let collapsedSet = new Set(); // códigos colapsados manualmente
+let pendingReg = {}; // pendingReg[code] = {img: dataUrl|null} -> foto do formulário ainda não registrada
 
-function blankApt(){ return {visited:false, issues:[], updatedAt:null}; }
+function blankApt(){ return {visited:false, issueSeq:0, issues:[], updatedAt:null}; }
 function getApt(code){
   if(!DATA.apartments[code]) return blankApt();
   return DATA.apartments[code];
@@ -418,16 +495,26 @@ function deriveStatus(apt){
   return "atencao";
 }
 function migrate(){
-  // converte registros do formato antigo (status/desc/img únicos) para o novo (lista de apontamentos)
+  // converte registros do formato antigo para o novo (lista de apontamentos com numeração estável)
   for(const code in DATA.apartments){
     const apt = DATA.apartments[code];
     if(apt && apt.issues===undefined && apt.status!==undefined){
       const visited = apt.status !== "nao_vistoriado";
       const issues = [];
       if(visited && (apt.status==="atencao" || apt.status==="nao_conforme") && (apt.desc || apt.img)){
-        issues.push({id:cryptoId(), severity:apt.status, desc:apt.desc||"", img:apt.img||null, createdAt:apt.updatedAt||new Date().toISOString()});
+        issues.push({id:cryptoId(), num:1, severity:apt.status, desc:apt.desc||"", img:apt.img||null, completed:false, resultImg:null, completedAt:null, createdAt:apt.updatedAt||new Date().toISOString()});
       }
-      DATA.apartments[code] = {visited, issues, updatedAt:apt.updatedAt||null};
+      DATA.apartments[code] = {visited, issueSeq:issues.length, issues, updatedAt:apt.updatedAt||null};
+    }
+    if(apt && apt.issues!==undefined){
+      // garante campos novos em registros já no formato de lista
+      if(apt.issueSeq===undefined) apt.issueSeq = apt.issues.length;
+      apt.issues.forEach((iss, i)=>{
+        if(iss.num===undefined) iss.num = i+1;
+        if(iss.completed===undefined) iss.completed = false;
+        if(iss.resultImg===undefined) iss.resultImg = null;
+        if(iss.completedAt===undefined) iss.completedAt = null;
+      });
     }
   }
 }
@@ -595,9 +682,13 @@ function buildAptCard(code){
   card.className = 'apt-card' + (collapsed ? ' collapsed' : '');
   card.id = 'card_'+code;
 
-  const openIssues = apt.issues.filter(i=>!i.completed).length;
-  const doneIssues = apt.issues.length - openIssues;
-  const issueCountLabel = apt.issues.length ? `${apt.issues.length} apontamento${apt.issues.length>1?'s':''}${doneIssues?` · ${doneIssues} concluído${doneIssues>1?'s':''}`:''}` : (apt.visited ? 'sem apontamentos' : 'pendente');
+  const openCount = apt.issues.filter(i=>!i.completed).length;
+  const doneCount = apt.issues.length - openCount;
+  const issueCountLabel = apt.issues.length
+    ? `${apt.issues.length} apontamento${apt.issues.length>1?'s':''}${doneCount?` · ${doneCount} concluído${doneCount>1?'s':''}`:''}`
+    : (apt.visited ? 'sem apontamentos' : 'pendente');
+
+  const reg = pendingReg[code] || {};
 
   card.innerHTML = `
     <div class="apt-card-head" onclick="toggleCard('${code}')">
@@ -610,111 +701,123 @@ function buildAptCard(code){
       <span class="chev">▾</span>
     </div>
     <div class="apt-card-body">
-      ${!apt.visited ? `
-        <div class="apt-empty-actions">
-          <button class="btn btn-ok" onclick="markConforme('${code}')">✓ Sem problemas (conforme)</button>
-          <button class="btn btn-add" onclick="addIssue('${code}')">+ Registrar apontamento</button>
+
+      <div class="apt-register">
+        <span class="reg-label">＋ Novo apontamento nesta unidade</span>
+        <div class="reg-grid">
+          <textarea class="reg-desc" id="regDesc_${code}" placeholder="Descreva o problema encontrado...">${reg.desc||''}</textarea>
+          <select class="reg-severity" id="regSeverity_${code}">
+            <option value="atencao" ${(reg.severity||'atencao')==='atencao'?'selected':''}>Atenção</option>
+            <option value="nao_conforme" ${reg.severity==='nao_conforme'?'selected':''}>Não conforme</option>
+          </select>
         </div>
-      ` : `
-        <div class="issues-wrap" id="issues_${code}"></div>
-        <div class="add-issue-bar">
-          <button class="btn btn-add" onclick="addIssue('${code}')">+ Adicionar apontamento</button>
-          ${apt.issues.length===0 ? `<button class="btn" onclick="resetApt('${code}')">desfazer vistoria</button>` : ''}
+        <div class="reg-actions">
+          <div class="reg-photo-cell">
+            <img class="img-preview ${reg.img?'has-img':''}" id="regImgPreview_${code}" src="${reg.img||''}" onclick="this.classList.contains('has-img') && openLightbox(this.src,'Foto do problema (pendente de registro)')">
+            <input type="file" accept="image/*" id="regFile_${code}" style="display:none;" onchange="handleRegImage('${code}', this)">
+            <button class="img-btn" onclick="document.getElementById('regFile_${code}').click()">${reg.img?'trocar foto':'+ foto do problema'}</button>
+          </div>
+          <button class="btn-register" onclick="registerIssue('${code}')">Registrar apontamento</button>
         </div>
-      `}
+        ${apt.issues.length===0 ? `
+          <div class="reg-conforme-row">
+            <button class="btn-link-ok" onclick="markConforme('${code}')">✓ Sem apontamentos nesta unidade (conforme)</button>
+          </div>
+        ` : ''}
+      </div>
+
+      <div class="issues-wrap" id="issues_${code}"></div>
+
+      ${apt.visited && apt.issues.length===0 ? `
+        <div class="apt-footer-actions">
+          <button class="btn" onclick="resetApt('${code}')">desfazer vistoria</button>
+        </div>
+      ` : ''}
     </div>
   `;
 
-  if(apt.visited){
-    const wrap = card.querySelector(`#issues_${code}`);
-    apt.issues.forEach((issue, idx)=>{
-      wrap.appendChild(buildIssueRow(code, issue, idx));
+  const wrap = card.querySelector(`#issues_${code}`);
+  if(apt.issues.length===0){
+    wrap.innerHTML = `<div class="issues-empty">Nenhum apontamento registrado ainda nesta unidade.</div>`;
+  } else {
+    apt.issues.forEach((issue)=>{
+      wrap.appendChild(buildIssueCard(code, issue));
     });
   }
+
+  // listeners do formulário de registro (mantém o texto digitado em memória até registrar)
+  const descEl = card.querySelector(`#regDesc_${code}`);
+  const sevEl = card.querySelector(`#regSeverity_${code}`);
+  descEl.addEventListener('input', (e)=>{
+    pendingReg[code] = pendingReg[code] || {};
+    pendingReg[code].desc = e.target.value;
+  });
+  sevEl.addEventListener('change', (e)=>{
+    pendingReg[code] = pendingReg[code] || {};
+    pendingReg[code].severity = e.target.value;
+  });
+
   return card;
 }
 
-function buildIssueRow(code, issue, idx){
-  const row = document.createElement('div');
-  row.className = 'issue-row' + (issue.completed ? ' is-done' : '');
-  row.id = 'row_'+issue.id;
-  row.innerHTML = `
-    <div class="issue-top">
-      <div class="issue-meta">
-        <span class="issue-num">APONTAMENTO ${idx+1}</span>
-        <select class="status-select" data-code="${code}" data-issue="${issue.id}">
-          <option value="atencao" ${issue.severity==='atencao'?'selected':''}>Atenção</option>
-          <option value="nao_conforme" ${issue.severity==='nao_conforme'?'selected':''}>Não conforme</option>
-        </select>
-      </div>
-      <div class="issue-desc">
-        <textarea class="desc-input" data-code="${code}" data-issue="${issue.id}" placeholder="Descreva o problema encontrado...">${issue.desc||""}</textarea>
-      </div>
+function buildIssueCard(code, issue){
+  const card = document.createElement('div');
+  card.className = 'issue-card' + (issue.completed ? ' is-done' : '');
+  card.id = 'issuecard_'+issue.id;
+
+  const descText = issue.desc && issue.desc.trim() ? escapeHtml(issue.desc.trim()) : '(sem descrição)';
+  const descClass = issue.desc && issue.desc.trim() ? '' : 'empty';
+
+  card.innerHTML = `
+    <div class="issue-card-head">
+      <span class="issue-id">#${issue.num}</span>
+      <span class="sev-badge sev-${issue.severity}">${SEV_LABEL[issue.severity]}</span>
+      ${issue.completed ? `<span class="done-badge">✓ concluído</span>` : ''}
+      <span class="spacer"></span>
       <button class="remove-issue" title="Remover apontamento" onclick="removeIssue('${code}','${issue.id}')">×</button>
     </div>
-    <div class="issue-bottom">
+    <p class="issue-desc-text ${descClass}">${descText}</p>
+    <div class="issue-photos">
       <div class="photo-cell">
         <span class="photo-cell-label">Foto do problema</span>
         <div class="img-cell">
-          <img class="img-preview ${issue.img?'has-img':''}" id="img_${issue.id}" src="${issue.img||''}">
+          <img class="img-preview ${issue.img?'has-img':''}" id="img_${issue.id}" src="${issue.img||''}" onclick="this.classList.contains('has-img') && openLightbox(this.src,'Unidade ${code} · Apontamento #${issue.num} · Foto do problema')">
           <input type="file" accept="image/*" id="file_${issue.id}" style="display:none;" onchange="handleImage('${code}','${issue.id}', this)">
           <button class="img-btn" onclick="document.getElementById('file_${issue.id}').click()">${issue.img?'trocar':'+ foto'}</button>
         </div>
       </div>
+      ${(issue.completed || issue.resultImg) ? `
       <div class="photo-cell">
         <span class="photo-cell-label">Foto do resultado final</span>
         <div class="img-cell">
-          <img class="img-preview ${issue.resultImg?'has-img':''}" id="imgResult_${issue.id}" src="${issue.resultImg||''}">
-          <input type="file" accept="image/*" id="fileResult_${issue.id}" style="display:none;" onchange="handleResultImage('${code}','${issue.id}', this)">
+          <img class="img-preview ${issue.resultImg?'has-img':''}" id="imgResult_${issue.id}" src="${issue.resultImg||''}" onclick="this.classList.contains('has-img') && openLightbox(this.src,'Unidade ${code} · Apontamento #${issue.num} · Resultado final')">
+          <input type="file" accept="image/*" id="fileResult_${issue.id}" style="display:none;" onchange="handleResultImage('${code}','${issue.id}', this, false)">
           <button class="img-btn final" onclick="document.getElementById('fileResult_${issue.id}').click()">${issue.resultImg?'trocar':'+ foto'}</button>
         </div>
-      </div>
-      <label class="done-toggle ${issue.completed?'checked':''}" id="doneLabel_${issue.id}">
-        <input type="checkbox" id="doneCheck_${issue.id}" ${issue.completed?'checked':''} onchange="toggleDone('${code}','${issue.id}', this.checked)">
-        ${issue.completed ? '<span class="done-badge">✓ concluído</span>' : 'marcar como concluído'}
-      </label>
-      <div class="issue-actions">
-        <span class="save-confirm" id="saveConfirm_${issue.id}">salvo ✓</span>
-        <button class="btn-save-issue" onclick="saveIssueNow('${code}','${issue.id}')">💾 Salvar apontamento</button>
-      </div>
+      </div>` : `
+        <input type="file" accept="image/*" id="fileResult_${issue.id}" style="display:none;" onchange="handleResultImage('${code}','${issue.id}', this, true)">
+      `}
+    </div>
+    <div class="issue-card-actions">
+      ${issue.completed
+        ? `<button class="btn-undo" onclick="toggleDone('${code}','${issue.id}', false)">↺ desfazer conclusão</button>`
+        : `<button class="btn-done" onclick="requestComplete('${code}','${issue.id}')">✔ Marcar como feito</button>`
+      }
+      <button class="btn-save-issue" onclick="saveIssueNow('${code}','${issue.id}')">💾 Salvar apontamento</button>
+      <span class="save-confirm" id="saveConfirm_${issue.id}">salvo ✓</span>
     </div>
   `;
-  row.querySelector('.status-select').addEventListener('change', (e)=>{
-    issue.severity = e.target.value;
-    touchApt(code);
-    renderStats(); renderElevation(); refreshCardBadge(code);
-    scheduleSave();
-  });
-  row.querySelector('.desc-input').addEventListener('input', (e)=>{
-    issue.desc = e.target.value;
-    touchApt(code);
-    scheduleSave();
-  });
-  return row;
+  return card;
 }
 
-function toggleDone(code, issueId, checked){
-  const apt = ensureApt(code);
-  const issue = apt.issues.find(i=>i.id===issueId);
-  if(!issue) return;
-  issue.completed = checked;
-  issue.completedAt = checked ? new Date().toISOString() : null;
-  touchApt(code);
-  const label = document.getElementById('doneLabel_'+issueId);
-  const row = document.getElementById('row_'+issueId);
-  if(label){
-    label.classList.toggle('checked', checked);
-    const textNode = label.childNodes[label.childNodes.length-1];
-    label.innerHTML = `<input type="checkbox" id="doneCheck_${issueId}" ${checked?'checked':''} onchange="toggleDone('${code}','${issueId}', this.checked)">${checked ? '<span class="done-badge">✓ concluído</span>' : 'marcar como concluído'}`;
-  }
-  if(row) row.classList.toggle('is-done', checked);
-  refreshCardBadge(code);
-  renderHeaderCounts();
-  scheduleSave();
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
 }
-window.toggleDone = toggleDone;
 
-function handleResultImage(code, issueId, input){
+/* ============ REGISTRO DIRETO DE APONTAMENTO ============ */
+function handleRegImage(code, input){
   const file = input.files[0];
   if(!file) return;
   const reader = new FileReader();
@@ -729,51 +832,52 @@ function handleResultImage(code, issueId, input){
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img,0,0,canvas.width,canvas.height);
       const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
-      const apt = ensureApt(code);
-      const issue = apt.issues.find(i=>i.id===issueId);
-      if(issue){ issue.resultImg = dataUrl; }
-      touchApt(code);
-      const preview = document.getElementById('imgResult_'+issueId);
+      pendingReg[code] = pendingReg[code] || {};
+      pendingReg[code].img = dataUrl;
+      const preview = document.getElementById('regImgPreview_'+code);
       if(preview){ preview.src = dataUrl; preview.classList.add('has-img'); }
       const btn = preview ? preview.parentElement.querySelector('.img-btn') : null;
-      if(btn) btn.textContent = 'trocar';
-      scheduleSave();
+      if(btn) btn.textContent = 'trocar foto';
     };
     img.src = e.target.result;
   };
   reader.readAsDataURL(file);
 }
-window.handleResultImage = handleResultImage;
+window.handleRegImage = handleRegImage;
 
-function saveIssueNow(code, issueId){
-  touchApt(code);
-  scheduleSave(true);
-  const el = document.getElementById('saveConfirm_'+issueId);
-  if(el){
-    el.classList.add('show');
-    setTimeout(()=>el.classList.remove('show'), 1800);
+function registerIssue(code){
+  const descEl = document.getElementById('regDesc_'+code);
+  const sevEl = document.getElementById('regSeverity_'+code);
+  const desc = descEl.value.trim();
+  const severity = sevEl.value;
+  const reg = pendingReg[code] || {};
+  const img = reg.img || null;
+
+  if(!desc && !img){
+    alert('Descreva o problema ou anexe uma foto antes de registrar o apontamento.');
+    return;
   }
+
+  const apt = ensureApt(code);
+  apt.visited = true;
+  apt.issueSeq = (apt.issueSeq||0) + 1;
+  apt.issues.push({
+    id:cryptoId(), num:apt.issueSeq, severity, desc, img,
+    completed:false, resultImg:null, completedAt:null,
+    createdAt:new Date().toISOString()
+  });
+  touchApt(code);
+  delete pendingReg[code];
+  collapsedSet.delete(code);
+  rerenderCard(code);
+  renderStats(); renderElevation();
+  scheduleSave();
 }
-window.saveIssueNow = saveIssueNow;
+window.registerIssue = registerIssue;
 
 function touchApt(code){
   const apt = ensureApt(code);
   apt.updatedAt = new Date().toISOString();
-}
-
-function refreshCardBadge(code){
-  const apt = getApt(code);
-  const st = deriveStatus(apt);
-  const card = document.getElementById('card_'+code);
-  if(!card) return;
-  const badge = card.querySelector('.apt-status-badge');
-  badge.style.background = STATUS[st].bg;
-  badge.style.color = STATUS[st].text;
-  badge.querySelector('.status-badge-dot').style.background = STATUS[st].color;
-  const countEl = card.querySelector('.apt-issue-count');
-  const openIssues = apt.issues.filter(i=>!i.completed).length;
-  const doneIssues = apt.issues.length - openIssues;
-  countEl.textContent = apt.issues.length ? `${apt.issues.length} apontamento${apt.issues.length>1?'s':''}${doneIssues?` · ${doneIssues} concluído${doneIssues>1?'s':''}`:''}` : (apt.visited ? 'sem apontamentos' : 'pendente');
 }
 
 function markConforme(code){
@@ -789,23 +893,12 @@ window.markConforme = markConforme;
 
 function resetApt(code){
   delete DATA.apartments[code];
+  delete pendingReg[code];
   rerenderCard(code);
   renderStats(); renderElevation();
   scheduleSave();
 }
 window.resetApt = resetApt;
-
-function addIssue(code){
-  const apt = ensureApt(code);
-  apt.visited = true;
-  apt.issues.push({id:cryptoId(), severity:'atencao', desc:'', img:null, completed:false, resultImg:null, completedAt:null, createdAt:new Date().toISOString()});
-  touchApt(code);
-  collapsedSet.delete(code);
-  rerenderCard(code);
-  renderStats(); renderElevation();
-  scheduleSave();
-}
-window.addIssue = addIssue;
 
 function removeIssue(code, issueId){
   const apt = ensureApt(code);
@@ -836,6 +929,7 @@ function rerenderCard(code){
   }
 }
 
+/* ============ FOTO DO PROBLEMA (em um apontamento já registrado) ============ */
 function handleImage(code, issueId, input){
   const file = input.files[0];
   if(!file) return;
@@ -855,10 +949,7 @@ function handleImage(code, issueId, input){
       const issue = apt.issues.find(i=>i.id===issueId);
       if(issue){ issue.img = dataUrl; }
       touchApt(code);
-      const preview = document.getElementById('img_'+issueId);
-      if(preview){ preview.src = dataUrl; preview.classList.add('has-img'); }
-      const btn = preview ? preview.parentElement.querySelector('.img-btn') : null;
-      if(btn) btn.textContent = 'trocar';
+      rerenderCard(code);
       scheduleSave();
     };
     img.src = e.target.result;
@@ -866,6 +957,101 @@ function handleImage(code, issueId, input){
   reader.readAsDataURL(file);
 }
 window.handleImage = handleImage;
+
+/* ============ CONCLUSÃO — exige foto do resultado final ============ */
+function requestComplete(code, issueId){
+  const apt = getApt(code);
+  const issue = apt.issues.find(i=>i.id===issueId);
+  if(!issue) return;
+  if(issue.resultImg){
+    toggleDone(code, issueId, true);
+  } else {
+    alert('Para concluir este apontamento, anexe a foto do resultado final.');
+    const input = document.getElementById('fileResult_'+issueId);
+    if(input) input.click();
+  }
+}
+window.requestComplete = requestComplete;
+
+function handleResultImage(code, issueId, input, autoComplete){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (e)=>{
+    const img = new Image();
+    img.onload = ()=>{
+      const maxW = 320;
+      const scale = Math.min(1, maxW/img.width);
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width*scale;
+      canvas.height = img.height*scale;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img,0,0,canvas.width,canvas.height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+      const apt = ensureApt(code);
+      const issue = apt.issues.find(i=>i.id===issueId);
+      if(issue){
+        issue.resultImg = dataUrl;
+        if(autoComplete){
+          issue.completed = true;
+          issue.completedAt = new Date().toISOString();
+        }
+      }
+      touchApt(code);
+      rerenderCard(code);
+      renderStats(); renderElevation();
+      scheduleSave();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+window.handleResultImage = handleResultImage;
+
+function toggleDone(code, issueId, checked){
+  const apt = ensureApt(code);
+  const issue = apt.issues.find(i=>i.id===issueId);
+  if(!issue) return;
+  issue.completed = checked;
+  issue.completedAt = checked ? new Date().toISOString() : null;
+  touchApt(code);
+  rerenderCard(code);
+  renderStats(); renderElevation();
+  scheduleSave();
+}
+window.toggleDone = toggleDone;
+
+function saveIssueNow(code, issueId){
+  touchApt(code);
+  scheduleSave(true);
+  const el = document.getElementById('saveConfirm_'+issueId);
+  if(el){
+    el.classList.add('show');
+    setTimeout(()=>el.classList.remove('show'), 1800);
+  }
+}
+window.saveIssueNow = saveIssueNow;
+
+/* ============ LIGHTBOX (zoom de imagem em modal) ============ */
+function openLightbox(src, caption){
+  if(!src) return;
+  const img = document.getElementById('lightboxImg');
+  const cap = document.getElementById('lightboxCaption');
+  img.src = src;
+  cap.textContent = caption || '';
+  document.getElementById('lightboxOverlay').classList.add('open');
+}
+window.openLightbox = openLightbox;
+
+function closeLightbox(e){
+  if(e) e.stopPropagation();
+  document.getElementById('lightboxOverlay').classList.remove('open');
+}
+window.closeLightbox = closeLightbox;
+
+document.addEventListener('keydown', (e)=>{
+  if(e.key==='Escape') closeLightbox();
+});
 
 /* ============ META ============ */
 ['metaBuilding','metaResp','metaDate'].forEach(id=>{
@@ -884,6 +1070,9 @@ function renderAll(){
 }
 
 /* ============ RELATÓRIO PDF — APONTAMENTOS EM ABERTO ============ */
+/* Layout: capa com resumo + uma página inteira por apontamento, com
+   unidade/pavimento/descrição centralizados acima de uma foto grande,
+   centralizada e ajustada à largura útil da folha. */
 async function generateOpenReport(){
   const btn = document.getElementById('pdfBtn');
   const openIssues = getOpenIssues();
@@ -900,103 +1089,116 @@ async function generateOpenReport(){
     const doc = new jsPDF({unit:'pt', format:'a4'});
     const pageW = doc.internal.pageSize.getWidth();
     const pageH = doc.internal.pageSize.getHeight();
-    const marginX = 40;
-    let y = 50;
+    const marginX = 50;
+    const marginTop = 56;
+    const marginBottom = 60;
 
     const brand = [44,126,80];
     const ink = [22,36,59];
     const grey = [110,119,134];
     const warn = [200,132,26];
     const bad = [194,59,59];
+    const lineGrey = [223,223,223];
 
-    function newPageIfNeeded(extra){
-      if(y + extra > pageH - 50){
-        doc.addPage();
-        y = 50;
-        drawPageHeader();
-      }
-    }
-    function drawPageHeader(){
-      doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.setTextColor(...brand);
-      doc.text('BE GARDEN', marginX, y);
-      doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...grey);
-      doc.text('Relatório de Apontamentos em Aberto', marginX, y+14);
-      doc.setDrawColor(...brand); doc.setLineWidth(1.2);
-      doc.line(marginX, y+22, pageW-marginX, y+22);
-      y += 38;
-      doc.setTextColor(...ink);
+    function loadImageDims(src){
+      return new Promise((resolve)=>{
+        if(!src){ resolve(null); return; }
+        const im = new Image();
+        im.onload = ()=> resolve({w: im.naturalWidth || im.width, h: im.naturalHeight || im.height});
+        im.onerror = ()=> resolve(null);
+        im.src = src;
+      });
     }
 
-    drawPageHeader();
+    /* ---------- CAPA ---------- */
+    doc.setFont('helvetica','bold'); doc.setFontSize(22); doc.setTextColor(...brand);
+    doc.text('BE GARDEN', pageW/2, marginTop+10, {align:'center'});
+    doc.setFont('helvetica','normal'); doc.setFontSize(12); doc.setTextColor(...grey);
+    doc.text('Relatório de Apontamentos em Aberto', pageW/2, marginTop+30, {align:'center'});
+    doc.setDrawColor(...brand); doc.setLineWidth(1.4);
+    doc.line(marginX, marginTop+44, pageW-marginX, marginTop+44);
 
-    doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(...grey);
+    let cy = marginTop + 90;
+    doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(...ink);
     const building = DATA.meta.building || '—';
     const resp = DATA.meta.resp || '—';
     const dateGen = new Date().toLocaleDateString('pt-BR');
-    doc.text(`Empreendimento: ${building}`, marginX, y);
-    doc.text(`Responsável: ${resp}`, marginX, y+13);
-    doc.text(`Emitido em: ${dateGen}`, marginX, y+26);
-    doc.text(`Total de apontamentos em aberto: ${openIssues.length}`, marginX, y+39);
-    y += 56;
+    [
+      `Empreendimento: ${building}`,
+      `Responsável: ${resp}`,
+      `Emitido em: ${dateGen}`,
+      `Total de apontamentos em aberto: ${openIssues.length}`
+    ].forEach(line=>{
+      doc.text(line, pageW/2, cy, {align:'center'});
+      cy += 18;
+    });
 
-    let currentFloorPrinted = null;
-    let currentAptPrinted = null;
+    /* ---------- UMA PÁGINA POR APONTAMENTO ---------- */
+    for(let idx=0; idx<openIssues.length; idx++){
+      const {floor, code, issue} = openIssues[idx];
+      doc.addPage();
+      let py = marginTop;
 
-    for(const item of openIssues){
-      const {floor, code, issue} = item;
-      newPageIfNeeded(70);
+      doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(...brand);
+      doc.text('BE GARDEN', marginX, py);
+      doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...grey);
+      doc.text(`Apontamento ${idx+1} de ${openIssues.length}`, pageW-marginX, py, {align:'right'});
+      doc.setDrawColor(...lineGrey); doc.setLineWidth(.7);
+      doc.line(marginX, py+10, pageW-marginX, py+10);
+      py += 46;
 
-      if(currentFloorPrinted !== floor){
-        currentFloorPrinted = floor;
-        currentAptPrinted = null;
-        doc.setFillColor(237,234,224);
-        doc.rect(marginX, y-11, pageW-marginX*2, 18, 'F');
-        doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(...ink);
-        doc.text(`PAVIMENTO ${String(floor).padStart(2,'0')}`, marginX+6, y+2);
-        y += 22;
-      }
+      // bloco central: unidade / pavimento / gravidade / descrição
+      doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.setTextColor(...ink);
+      doc.text(`Unidade ${code}`, pageW/2, py, {align:'center'});
+      py += 18;
 
-      if(currentAptPrinted !== code){
-        currentAptPrinted = code;
-        doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(...ink);
-        doc.text(`Unidade ${code}`, marginX, y);
-        y += 14;
-      }
+      doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor(...grey);
+      doc.text(`Pavimento ${String(floor).padStart(2,'0')} · Apontamento #${issue.num}`, pageW/2, py, {align:'center'});
+      py += 22;
 
       const sevColor = issue.severity==='nao_conforme' ? bad : warn;
       const sevLabel = issue.severity==='nao_conforme' ? 'NÃO CONFORME' : 'ATENÇÃO';
-      doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor(...sevColor);
-      doc.text(`● ${sevLabel}`, marginX+10, y);
-      y += 12;
+      doc.setFont('helvetica','bold'); doc.setFontSize(10.5); doc.setTextColor(...sevColor);
+      doc.text(`●  ${sevLabel}`, pageW/2, py, {align:'center'});
+      py += 24;
 
-      doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(...ink);
+      doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(...ink);
       const descText = issue.desc && issue.desc.trim() ? issue.desc.trim() : '(sem descrição)';
-      const lines = doc.splitTextToSize(descText, pageW - marginX*2 - 90);
-      const textH = lines.length*11;
-      let imgH = 0;
-      let imgDrawn = false;
-      if(issue.img){
-        newPageIfNeeded(Math.max(textH,50)+14);
-        try{
-          doc.addImage(issue.img, 'JPEG', pageW-marginX-70, y-2, 70, 50);
-          imgDrawn = true; imgH = 54;
-        }catch(e){ /* ignora imagem inválida */ }
-      } else {
-        newPageIfNeeded(textH+14);
-      }
-      doc.text(lines, marginX+10, y);
-      y += Math.max(textH, imgDrawn?imgH:0) + 14;
+      const descLines = doc.splitTextToSize(descText, pageW - marginX*2 - 70);
+      doc.text(descLines, pageW/2, py, {align:'center'});
+      py += descLines.length*14 + 26;
 
-      doc.setDrawColor(229,229,229); doc.setLineWidth(.5);
-      doc.line(marginX+10, y-8, pageW-marginX, y-8);
+      // foto do problema — grande, centralizada, preenchendo a largura útil
+      if(issue.img){
+        const dims = await loadImageDims(issue.img);
+        const maxW = pageW - marginX*2;
+        const maxH = pageH - marginBottom - py;
+        if(dims && dims.w && dims.h && maxH > 40){
+          let drawW = maxW;
+          let drawH = drawW * (dims.h/dims.w);
+          if(drawH > maxH){
+            drawH = maxH;
+            drawW = drawH * (dims.w/dims.h);
+          }
+          const drawX = (pageW-drawW)/2;
+          doc.setDrawColor(...lineGrey); doc.setLineWidth(1);
+          doc.rect(drawX-2, py-2, drawW+4, drawH+4);
+          try{ doc.addImage(issue.img, 'JPEG', drawX, py, drawW, drawH); }
+          catch(e){ /* ignora imagem inválida e segue o relatório */ }
+        }
+      } else {
+        doc.setFont('helvetica','italic'); doc.setFontSize(10); doc.setTextColor(...grey);
+        doc.text('(sem foto do problema anexada)', pageW/2, py+24, {align:'center'});
+      }
     }
 
+    // rodapé numerado em todas as páginas
     const totalPages = doc.internal.getNumberOfPages();
     for(let p=1; p<=totalPages; p++){
       doc.setPage(p);
       doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(...grey);
-      doc.text(`Página ${p} de ${totalPages}`, pageW-marginX-60, pageH-25);
-      doc.text('Be Garden · Checklist de Vistoria', marginX, pageH-25);
+      doc.text(`Página ${p} de ${totalPages}`, pageW/2, pageH-30, {align:'center'});
+      doc.text('Be Garden · Checklist de Vistoria', pageW/2, pageH-18, {align:'center'});
     }
 
     const fileBuilding = (DATA.meta.building||'apontamentos').replace(/[^a-z0-9]+/gi,'_').toLowerCase();
