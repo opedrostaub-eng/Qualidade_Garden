@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checklist de Vistoria — Acompanhamento por Pavimento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  :root{
+    --ink:#16243B;
+    --blueprint:#1C3A5E;
+    --blueprint-2:#234972;
+    --paper:#F6F4EE;
+    --paper-2:#EDEAE0;
+    --line:#C9CCD1;
+    --line-dark:#3C5470;
+    --orange:#FF5A1F;
+    --orange-dim:#FFE3D6;
+    --ok:#2F8B5C;
+    --ok-bg:#DFF1E6;
+    --warn:#C8841A;
+    --warn-bg:#FBEAD0;
+    --bad:#C23B3B;
+    --bad-bg:#F8DEDE;
+    --grey:#8A93A1;
+    --grey-bg:#E7E8EA;
+    --done:#2E6FCB;
+    --done-bg:#DEEAFB;
+    --brand:#3FA66B;
+    --brand-dark:#2C7E50;
+    --brand-bg:#E7F5ED;
+    --radius:3px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    line-height:1.4;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  h1,h2,h3,.disp{font-family:'Barlow Condensed',sans-serif; font-weight:700; letter-spacing:.01em;}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--orange);
+    font-weight:600;
+  }
+
+  /* ---------- HEADER ---------- */
+  header{
+    background:#fff;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:28px 28px;
+    background-position:-1px -1px;
+    color:var(--ink);
+    padding:20px 28px 18px;
+    border-bottom:4px solid var(--brand);
+  }
+  .header-top{
+    display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:14px;
+  }
+  .brand-row{display:flex; align-items:center; gap:12px;}
+  .brand-mark{
+    font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:30px; letter-spacing:.01em;
+    color:var(--brand-dark); text-transform:uppercase; line-height:1; white-space:nowrap;
+  }
+  .brand-mark span{color:var(--brand);}
+  .brand-divider{width:1px; height:28px; background:var(--line);}
+  header h1{
+    font-size:18px; margin:0; color:var(--ink); text-transform:uppercase; font-weight:600; letter-spacing:.02em;
+  }
+  .eyebrow.on-light{color:var(--brand-dark);}
+  .meta-bar{
+    display:flex; gap:18px; flex-wrap:wrap; margin-top:14px; align-items:flex-end;
+  }
+  .meta-field{
+    display:flex; flex-direction:column; gap:3px;
+  }
+  .meta-field label{
+    font-size:9.5px; text-transform:uppercase; letter-spacing:.1em; color:#6B7686; font-family:'IBM Plex Mono',monospace;
+  }
+  .meta-field input{
+    background:#fff;
+    border:1px solid var(--line);
+    color:var(--ink);
+    padding:6px 9px;
+    border-radius:var(--radius);
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    min-width:170px;
+  }
+  .meta-field input::placeholder{color:#9AA3B0;}
+  .meta-field input:focus{outline:2px solid var(--brand); outline-offset:1px;}
+  .save-pill{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:#6B7686;
+    display:flex; align-items:center; gap:6px;
+  }
+  .dot{width:7px; height:7px; border-radius:50%; background:var(--brand); transition:background .2s;}
+  .dot.saving{background:var(--orange); animation:pulse 1s infinite;}
+  @keyframes pulse{50%{opacity:.3;}}
+  .header-actions{margin-top:14px; display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+  .btn-pdf{
+    font-family:'IBM Plex Mono',monospace; font-size:11.5px; text-transform:uppercase; letter-spacing:.04em;
+    border-radius:var(--radius); padding:9px 14px; cursor:pointer; border:1px solid var(--brand-dark);
+    background:var(--brand-dark); color:#fff; display:inline-flex; align-items:center; gap:7px;
+  }
+  .btn-pdf:hover{background:var(--brand);}
+  .btn-pdf:disabled{opacity:.6; cursor:wait;}
+  .open-count{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:#6B7686; display:flex; align-items:center; gap:6px;
+  }
+
+  /* ---------- LAYOUT ---------- */
+  .wrap{max-width:1280px; margin:0 auto; padding:26px 28px 80px;}
+  .grid-top{
+    display:grid; grid-template-columns: 1.15fr 1.85fr; gap:20px; align-items:start;
+  }
+  @media (max-width:900px){ .grid-top{grid-template-columns:1fr;} }
+
+  /* ---------- DASHBOARD CARDS ---------- */
+  .stats-row{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:18px;}
+  .stat-card{
+    background:#fff; border:1px solid var(--line); border-radius:var(--radius);
+    padding:12px 14px; position:relative; overflow:hidden;
+  }
+  .stat-card::before{
+    content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--c,var(--grey));
+  }
+  .stat-num{font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:30px; line-height:1;}
+  .stat-label{font-size:11px; color:#5A6473; margin-top:4px; text-transform:uppercase; letter-spacing:.04em;}
+  .progress-card{
+    background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:16px 16px 14px; margin-bottom:18px;
+  }
+  .progress-card .top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;}
+  .progress-track{height:10px; background:var(--grey-bg); border-radius:5px; overflow:hidden; display:flex;}
+  .progress-seg{height:100%;}
+
+  .panel{
+    background:#fff; border:1px solid var(--line); border-radius:var(--radius);
+  }
+  .panel-head{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:12px 16px; border-bottom:1px solid var(--line); background:var(--paper-2);
+  }
+  .panel-head h2{margin:0; font-size:18px; text-transform:uppercase;}
+  .panel-body{padding:14px 16px;}
+
+  /* ---------- ELEVATION (signature element) ---------- */
+  .elevation{display:flex; flex-direction:column-reverse; gap:3px;}
+  .floor-row{
+    display:grid; grid-template-columns:46px 1fr 54px; align-items:center; gap:8px;
+    cursor:pointer; padding:3px 4px; border-radius:var(--radius);
+  }
+  .floor-row:hover{background:var(--paper-2);}
+  .floor-row.active{background:var(--orange-dim); outline:1px solid var(--orange);}
+  .floor-num{
+    font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:12.5px; color:var(--blueprint); text-align:right;
+  }
+  .floor-bar{
+    height:16px; background:var(--grey-bg); border-radius:2px; overflow:hidden; display:flex; border:1px solid var(--line);
+  }
+  .floor-bar span{height:100%;}
+  .floor-pct{font-family:'IBM Plex Mono',monospace; font-size:11px; color:#5A6473; text-align:right;}
+  .gap-row{
+    height:9px; display:flex; align-items:center; gap:6px; padding-left:46px;
+  }
+  .gap-row span{
+    font-family:'IBM Plex Mono',monospace; font-size:9px; color:#A6AEBA; letter-spacing:.06em;
+  }
+  .gap-row::before, .gap-row::after{content:""; flex:1; border-top:1px dashed var(--line);}
+
+  .legend{display:flex; gap:14px; flex-wrap:wrap; margin-top:12px; padding-top:10px; border-top:1px dashed var(--line);}
+  .legend-item{display:flex; align-items:center; gap:6px; font-size:11.5px; color:#5A6473;}
+  .legend-sw{width:10px; height:10px; border-radius:2px;}
+
+  /* ---------- FLOOR DETAIL ---------- */
+  .floor-title-row{display:flex; align-items:baseline; gap:10px;}
+  .floor-title-row .disp{font-size:22px;}
+  .floor-sub{font-size:12px; color:#5A6473;}
+
+  .apt-list{display:flex; flex-direction:column; gap:10px; margin-top:10px;}
+  .apt-card{border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;}
+  .apt-card-head{
+    display:flex; align-items:center; gap:10px; padding:9px 12px;
+    background:var(--paper-2); cursor:pointer; user-select:none;
+  }
+  .apt-code{font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:13.5px; min-width:84px;}
+  .apt-status-badge{
+    display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:600;
+    padding:3px 9px; border-radius:11px;
+  }
+  .status-badge-dot{width:7px; height:7px; border-radius:50%; display:inline-block;}
+  .apt-issue-count{font-size:11px; color:#5A6473; font-family:'IBM Plex Mono',monospace;}
+  .apt-card-head .spacer{flex:1;}
+  .chev{font-size:11px; color:#8A93A1; transition:transform .15s;}
+  .apt-card.collapsed .chev{transform:rotate(-90deg);}
+  .apt-card.collapsed .apt-card-body{display:none;}
+
+  .apt-card-body{padding:12px; border-top:1px solid var(--line); background:#fff;}
+  .apt-empty-actions{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+  .btn{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.04em;
+    border-radius:var(--radius); padding:7px 12px; cursor:pointer; border:1px solid var(--line); background:#fff; color:var(--ink);
+  }
+  .btn:hover{background:var(--paper-2);}
+  .btn-ok{border-color:var(--ok); color:var(--ok);}
+  .btn-ok:hover{background:var(--ok-bg);}
+  .btn-add{border-color:var(--orange); color:var(--orange);}
+  .btn-add:hover{background:var(--orange-dim);}
+  .btn-ghost{border:none; background:none; color:#8A93A1; padding:4px 6px;}
+  .btn-ghost:hover{color:var(--bad); background:none;}
+
+  .issues-wrap{display:flex; flex-direction:column; gap:10px;}
+  .issue-row{
+    border:1px solid var(--line); border-radius:var(--radius); padding:10px; background:var(--paper);
+  }
+  .issue-row.is-done{border-color:var(--done); background:#FBFDFF;}
+  .issue-top{display:flex; align-items:flex-start; gap:10px; margin-bottom:8px;}
+  .issue-num{
+    font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8A93A1; margin-bottom:4px; display:block;
+  }
+  select.status-select{
+    width:100%; border:1px solid var(--line); border-radius:var(--radius);
+    padding:6px 8px; font-family:'Inter',sans-serif; font-size:12.5px; font-weight:600; cursor:pointer;
+  }
+  .issue-top .issue-meta{width:150px; flex:0 0 150px;}
+  .issue-top .issue-desc{flex:1;}
+  textarea.desc-input{
+    width:100%; min-height:42px; border:1px solid var(--line); border-radius:var(--radius);
+    padding:6px 8px; font-family:'Inter',sans-serif; font-size:12.5px; resize:vertical;
+  }
+  textarea.desc-input:focus, select.status-select:focus, input:focus{outline:2px solid var(--orange); outline-offset:0;}
+  .remove-issue{
+    border:none; background:none; color:#B8BFC9; font-size:16px; cursor:pointer; line-height:1; padding:4px; flex:0 0 auto;
+  }
+  .remove-issue:hover{color:var(--bad);}
+
+  .issue-bottom{display:flex; gap:10px; flex-wrap:wrap; align-items:flex-start; border-top:1px dashed var(--line); padding-top:9px;}
+  .photo-cell{display:flex; flex-direction:column; align-items:center; gap:5px;}
+  .photo-cell-label{font-family:'IBM Plex Mono',monospace; font-size:9px; color:#8A93A1; text-transform:uppercase; letter-spacing:.05em;}
+  .img-cell{display:flex; flex-direction:column; align-items:center; gap:5px;}
+  .img-preview{
+    width:78px; height:54px; object-fit:cover; border-radius:var(--radius); border:1px solid var(--line); display:none; background:var(--paper-2);
+  }
+  .img-preview.has-img{display:block;}
+  .img-btn{
+    font-family:'IBM Plex Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.04em;
+    background:var(--paper-2); border:1px solid var(--line); border-radius:var(--radius);
+    padding:4px 7px; cursor:pointer; color:var(--ink); width:100%;
+  }
+  .img-btn:hover{background:var(--line);}
+  .img-btn.final{border-color:var(--done); color:var(--done);}
+  .img-btn.final:hover{background:var(--done-bg);}
+
+  .done-toggle{
+    display:flex; align-items:center; gap:7px; font-family:'IBM Plex Mono',monospace; font-size:11px;
+    color:var(--ink); cursor:pointer; user-select:none; flex:0 0 auto; padding-top:2px;
+  }
+  .done-toggle input{width:15px; height:15px; accent-color:var(--done); cursor:pointer;}
+  .done-toggle.checked{color:var(--done); font-weight:600;}
+
+  .issue-actions{display:flex; align-items:center; gap:8px; margin-left:auto; flex:0 0 auto; align-self:flex-end;}
+  .btn-save-issue{
+    font-family:'IBM Plex Mono',monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.04em;
+    border-radius:var(--radius); padding:6px 10px; cursor:pointer; border:1px solid var(--blueprint); background:var(--blueprint); color:#fff;
+  }
+  .btn-save-issue:hover{background:var(--blueprint-2);}
+  .save-confirm{font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--ok); opacity:0; transition:opacity .25s;}
+  .save-confirm.show{opacity:1;}
+  .done-badge{
+    display:inline-flex; align-items:center; gap:5px; font-size:10.5px; font-weight:600; color:var(--done);
+    background:var(--done-bg); padding:2px 8px; border-radius:10px; font-family:'IBM Plex Mono',monospace;
+  }
+
+  .add-issue-bar{margin-top:10px; display:flex; gap:8px;}
+
+  .empty-floor{padding:40px 16px; text-align:center; color:#8A93A1;}
+  .empty-floor .disp{font-size:20px; color:var(--ink);}
+
+  footer{
+    text-align:center; padding:18px; font-size:11px; color:#8A93A1; font-family:'IBM Plex Mono',monospace;
+  }
+
+  ::-webkit-scrollbar{width:9px; height:9px;}
+  ::-webkit-scrollbar-thumb{background:var(--line); border-radius:5px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="brand-row">
+      <div class="brand-mark">BE <span>GARDEN</span></div>
+      <div class="brand-divider"></div>
+      <div>
+        <div class="eyebrow on-light">Acompanhamento de obra · pavimento a pavimento</div>
+        <h1>Checklist de Vistoria</h1>
+      </div>
+    </div>
+    <div class="save-pill"><span class="dot" id="saveDot"></span><span id="saveText">sincronizado</span></div>
+  </div>
+  <div class="meta-bar">
+    <div class="meta-field">
+      <label>Empreendimento</label>
+      <input type="text" id="metaBuilding" placeholder="Nome do empreendimento">
+    </div>
+    <div class="meta-field">
+      <label>Responsável</label>
+      <input type="text" id="metaResp" placeholder="Quem está vistoriando">
+    </div>
+    <div class="meta-field">
+      <label>Data</label>
+      <input type="date" id="metaDate">
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn-pdf" id="pdfBtn" onclick="generateOpenReport()">📄 Gerar relatório PDF — apontamentos em aberto</button>
+    <span class="open-count" id="openCount">0 apontamentos em aberto</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="grid-top">
+
+    <!-- ===== LEFT: dashboard + elevation ===== -->
+    <div>
+      <div class="stats-row" id="statsRow"></div>
+
+      <div class="progress-card">
+        <div class="top">
+          <span class="eyebrow">Progresso geral</span>
+          <span class="mono" id="progressLabel" style="font-size:12px;color:#5A6473;">0 / 0</span>
+        </div>
+        <div class="progress-track" id="progressTrack"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Edifício</h2>
+          <span class="eyebrow" id="floorCount">18 pavimentos</span>
+        </div>
+        <div class="panel-body">
+          <div class="elevation" id="elevation"></div>
+          <div class="legend">
+            <div class="legend-item"><span class="legend-sw" style="background:var(--ok);"></span>Conforme</div>
+            <div class="legend-item"><span class="legend-sw" style="background:var(--warn);"></span>Atenção</div>
+            <div class="legend-item"><span class="legend-sw" style="background:var(--bad);"></span>Não conforme</div>
+            <div class="legend-item"><span class="legend-sw" style="background:var(--grey);"></span>Não vistoriado</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== RIGHT: floor detail / fill form ===== -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="floor-title-row">
+          <h2 class="disp" id="floorTitle">Selecione um pavimento</h2>
+          <span class="floor-sub" id="floorSubtitle"></span>
+        </div>
+      </div>
+      <div class="panel-body" id="floorBody">
+        <div class="empty-floor">
+          <div class="disp">↑ Clique em um pavimento na fachada ao lado</div>
+          <p>Os apartamentos daquele andar aparecem aqui para preenchimento.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>checklist de vistoria · dados salvos automaticamente e compartilhados entre todos que acessam este link</footer>
+
+<script>
+/* ============ DADOS DO EDIFÍCIO ============ */
+const FLOORS = {"21":["2101","2102","2103","2104","2105","2106","2107","2108"],"20":["2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016"],"19":["1901","1902","1903","1904","1905","1906","1907","1908","1909","1910","1911","1912","1913","1914","1915","1916"],"18":["1801","1802","1803","1804","1805","1806","1807","1808","1809","1810","1811","1812","1813","1814","1815","1816"],"17":["1703","1704","1705","1706","1707","1708","1709","1710","1711","1712","1713","1714","1715","1716"],"16":["1603","1604","1605","1606","1607","1608","1609","1610","1611","1612","1613","1614","1615","1616"],"15":["1501","1502","1503","1504","1505","1506","1507","1508","1509","1510","1511","1512","1513","1514","1515","1516"],"14":["1401","1402","1403","1404","1405","1406","1407","1408","1409","1410","1411","1412","1413","1414"],"13":["1301","1302","1303","1304","1305","1306","1307","1308","1309","1310","1311","1312","1313","1314"],"12":["1201","1202","1203","1204","1205","1206","1207","1208","1209","1210","1211","1212","1213","1214","1215","1216"],"11":["1101","1102","1103","1104","1105","1106","1109","1110","1111","1112","1113","1114","1115","1116"],"10":["1001","1002","1003","1004","1005","1006","1009","1010","1011","1012","1013","1014","1015","1016"],"9":["0901","0902","0903","0904","0905","0906","0907","0908","0909","0910","0911","0912","0913","0914","0915","0916"],"7":["0701","0702","0703","0704","0705","0706","0707","0708","0709","0710","0711","0712","0713","0714","0715","0716"],"6":["0601","0602","0603","0604","0605","0606","0607","0608","0611","0612","0613","0614","0615","0616"],"5":["0501","0502","0503","0504","0505","0506","0507","0508","0511","0512","0513","0514","0515","0516"],"4":["0401","0402","0403","0404","0405","0406","0407","0408","0409","0410","0411","0412","0413","0414","0415","0416"],"3":["0301","0302","0303","0304","0305","0306","0307","0308","0309","0310","0311","0312","0313","0314","0315","0316"]};
+const FLOOR_ORDER = Object.keys(FLOORS).map(Number).sort((a,b)=>b-a); // 21 -> 3
+const ALL_FLOOR_SLOTS = [21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1]; // para mostrar lacunas reais do prédio
+
+const STATUS = {
+  "conforme":      {label:"Conforme",        color:"var(--ok)",   bg:"var(--ok-bg)",   text:"#1E5E3D"},
+  "atencao":       {label:"Atenção",         color:"var(--warn)", bg:"var(--warn-bg)", text:"#8A5C0F"},
+  "nao_conforme":  {label:"Não conforme",    color:"var(--bad)",  bg:"var(--bad-bg)",  text:"#8C2828"},
+  "nao_vistoriado":{label:"Não vistoriado",  color:"var(--grey)", bg:"var(--grey-bg)", text:"#5A6473"}
+};
+const STATUS_ORDER = ["conforme","atencao","nao_conforme","nao_vistoriado"];
+
+/* ============ ESTADO ============ */
+let DATA = { meta:{building:"",resp:"",date:""}, apartments:{} }; // apartments[code] = {visited, issues:[{id,severity,desc,img,createdAt}], updatedAt}
+let currentFloor = null;
+let saveTimer = null;
+let collapsedSet = new Set(); // códigos colapsados manualmente
+
+function blankApt(){ return {visited:false, issues:[], updatedAt:null}; }
+function getApt(code){
+  if(!DATA.apartments[code]) return blankApt();
+  return DATA.apartments[code];
+}
+function ensureApt(code){
+  if(!DATA.apartments[code]) DATA.apartments[code] = blankApt();
+  return DATA.apartments[code];
+}
+function deriveStatus(apt){
+  if(!apt.visited) return "nao_vistoriado";
+  if(!apt.issues || apt.issues.length===0) return "conforme";
+  if(apt.issues.some(i=>i.severity==="nao_conforme")) return "nao_conforme";
+  return "atencao";
+}
+function migrate(){
+  // converte registros do formato antigo (status/desc/img únicos) para o novo (lista de apontamentos)
+  for(const code in DATA.apartments){
+    const apt = DATA.apartments[code];
+    if(apt && apt.issues===undefined && apt.status!==undefined){
+      const visited = apt.status !== "nao_vistoriado";
+      const issues = [];
+      if(visited && (apt.status==="atencao" || apt.status==="nao_conforme") && (apt.desc || apt.img)){
+        issues.push({id:cryptoId(), severity:apt.status, desc:apt.desc||"", img:apt.img||null, createdAt:apt.updatedAt||new Date().toISOString()});
+      }
+      DATA.apartments[code] = {visited, issues, updatedAt:apt.updatedAt||null};
+    }
+  }
+}
+function cryptoId(){ return 'i'+Math.random().toString(36).slice(2,10); }
+
+/* ============ STORAGE ============ */
+async function loadAll(){
+  try{
+    const res = await window.storage.get('inspection_data', true);
+    if(res && res.value){
+      const parsed = JSON.parse(res.value);
+      DATA = Object.assign({meta:{building:"",resp:"",date:""},apartments:{}}, parsed);
+    }
+  }catch(e){ /* nada salvo ainda */ }
+  migrate();
+  document.getElementById('metaBuilding').value = DATA.meta.building || "";
+  document.getElementById('metaResp').value = DATA.meta.resp || "";
+  document.getElementById('metaDate').value = DATA.meta.date || "";
+  renderAll();
+}
+
+function scheduleSave(immediate){
+  const dot = document.getElementById('saveDot');
+  const txt = document.getElementById('saveText');
+  dot.classList.add('saving'); txt.textContent = "salvando...";
+  clearTimeout(saveTimer);
+  const doSave = async ()=>{
+    try{
+      await window.storage.set('inspection_data', JSON.stringify(DATA), true);
+      dot.classList.remove('saving'); txt.textContent = "sincronizado";
+    }catch(e){
+      txt.textContent = "erro ao salvar — tente novamente";
+    }
+  };
+  if(immediate){ doSave(); } else { saveTimer = setTimeout(doSave, 500); }
+}
+
+/* ============ RENDER: STATS ============ */
+function computeCounts(){
+  const counts = {conforme:0, atencao:0, nao_conforme:0, nao_vistoriado:0};
+  let total = 0;
+  for(const f of FLOOR_ORDER){
+    for(const code of FLOORS[f]){
+      total++;
+      const st = deriveStatus(getApt(code));
+      counts[st] = (counts[st]||0) + 1;
+    }
+  }
+  return {counts, total};
+}
+
+function renderStats(){
+  const {counts, total} = computeCounts();
+  const cards = [
+    {key:"conforme", label:"Conforme", c:"var(--ok)"},
+    {key:"atencao", label:"Atenção", c:"var(--warn)"},
+    {key:"nao_conforme", label:"Não conforme", c:"var(--bad)"},
+    {key:"nao_vistoriado", label:"Não vistoriado", c:"var(--grey)"}
+  ];
+  document.getElementById('statsRow').innerHTML = cards.map(c=>`
+    <div class="stat-card" style="--c:${c.c};">
+      <div class="stat-num">${counts[c.key]}</div>
+      <div class="stat-label">${c.label}</div>
+    </div>
+  `).join('');
+
+  const done = counts.conforme + counts.atencao + counts.nao_conforme;
+  const pct = total ? Math.round((done/total)*100) : 0;
+  document.getElementById('progressLabel').textContent = `${done} / ${total} vistoriados · ${pct}%`;
+  const track = document.getElementById('progressTrack');
+  track.innerHTML = STATUS_ORDER.filter(s=>s!=="nao_vistoriado").map(s=>{
+    const w = total ? (counts[s]/total*100) : 0;
+    return `<div class="progress-seg" style="width:${w}%;background:${STATUS[s].color};"></div>`;
+  }).join('') + `<div class="progress-seg" style="width:${total?(counts.nao_vistoriado/total*100):100}%;background:var(--grey-bg);"></div>`;
+  renderHeaderCounts();
+}
+
+function renderHeaderCounts(){
+  const openIssues = getOpenIssues();
+  const el = document.getElementById('openCount');
+  if(el) el.textContent = `${openIssues.length} apontamento${openIssues.length!==1?'s':''} em aberto`;
+}
+
+function getOpenIssues(){
+  const list = [];
+  for(const f of FLOOR_ORDER){
+    for(const code of FLOORS[f]){
+      const apt = getApt(code);
+      apt.issues.filter(i=>!i.completed).forEach(issue=>{
+        list.push({floor:f, code, issue});
+      });
+    }
+  }
+  return list;
+}
+
+/* ============ RENDER: ELEVATION ============ */
+function floorCounts(floorNum){
+  const codes = FLOORS[String(floorNum)] || [];
+  const counts = {conforme:0, atencao:0, nao_conforme:0, nao_vistoriado:0};
+  codes.forEach(c=>{ counts[deriveStatus(getApt(c))]++; });
+  return {counts, total:codes.length};
+}
+
+function renderElevation(){
+  const el = document.getElementById('elevation');
+  let html = "";
+  ALL_FLOOR_SLOTS.forEach(f=>{
+    if(!FLOORS[String(f)]){
+      html += `<div class="gap-row"><span>PAV ${String(f).padStart(2,'0')} — SEM UNIDADES</span></div>`;
+      return;
+    }
+    const {counts, total} = floorCounts(f);
+    const done = counts.conforme + counts.atencao + counts.nao_conforme;
+    const pct = total ? Math.round((done/total)*100) : 0;
+    const segs = STATUS_ORDER.map(s=>{
+      const w = total ? (counts[s]/total*100) : 0;
+      const color = s==="nao_vistoriado" ? "var(--grey-bg)" : STATUS[s].color;
+      return w>0 ? `<span style="width:${w}%;background:${color};"></span>` : "";
+    }).join('');
+    const active = (currentFloor===f) ? "active" : "";
+    html += `
+      <div class="floor-row ${active}" data-floor="${f}" onclick="selectFloor(${f})">
+        <div class="floor-num">${String(f).padStart(2,'0')}</div>
+        <div class="floor-bar">${segs}</div>
+        <div class="floor-pct">${pct}%</div>
+      </div>`;
+  });
+  el.innerHTML = html;
+  document.getElementById('floorCount').textContent = `${FLOOR_ORDER.length} pavimentos · ${Object.values(FLOORS).reduce((a,b)=>a+b.length,0)} unidades`;
+}
+
+/* ============ RENDER: FLOOR DETAIL ============ */
+function selectFloor(f){
+  currentFloor = f;
+  renderElevation();
+  renderFloorDetail();
+}
+window.selectFloor = selectFloor;
+
+function renderFloorDetail(){
+  const body = document.getElementById('floorBody');
+  if(currentFloor===null){
+    document.getElementById('floorTitle').textContent = "Selecione um pavimento";
+    document.getElementById('floorSubtitle').textContent = "";
+    return;
+  }
+  const codes = FLOORS[String(currentFloor)];
+  const {counts} = floorCounts(currentFloor);
+  document.getElementById('floorTitle').textContent = `Pavimento ${String(currentFloor).padStart(2,'0')}`;
+  document.getElementById('floorSubtitle').textContent = `${codes.length} unidades · ${counts.conforme} conforme · ${counts.atencao} atenção · ${counts.nao_conforme} não conforme`;
+
+  body.innerHTML = `<div class="apt-list" id="aptList"></div>`;
+  const list = document.getElementById('aptList');
+  codes.forEach(code=>{
+    list.appendChild(buildAptCard(code));
+  });
+}
+
+function buildAptCard(code){
+  const apt = getApt(code);
+  const st = deriveStatus(apt);
+  const collapsed = collapsedSet.has(code);
+  const card = document.createElement('div');
+  card.className = 'apt-card' + (collapsed ? ' collapsed' : '');
+  card.id = 'card_'+code;
+
+  const openIssues = apt.issues.filter(i=>!i.completed).length;
+  const doneIssues = apt.issues.length - openIssues;
+  const issueCountLabel = apt.issues.length ? `${apt.issues.length} apontamento${apt.issues.length>1?'s':''}${doneIssues?` · ${doneIssues} concluído${doneIssues>1?'s':''}`:''}` : (apt.visited ? 'sem apontamentos' : 'pendente');
+
+  card.innerHTML = `
+    <div class="apt-card-head" onclick="toggleCard('${code}')">
+      <span class="apt-code">${code}</span>
+      <span class="apt-status-badge" style="background:${STATUS[st].bg};color:${STATUS[st].text};">
+        <span class="status-badge-dot" style="background:${STATUS[st].color};"></span>${STATUS[st].label}
+      </span>
+      <span class="apt-issue-count">${issueCountLabel}</span>
+      <span class="spacer"></span>
+      <span class="chev">▾</span>
+    </div>
+    <div class="apt-card-body">
+      ${!apt.visited ? `
+        <div class="apt-empty-actions">
+          <button class="btn btn-ok" onclick="markConforme('${code}')">✓ Sem problemas (conforme)</button>
+          <button class="btn btn-add" onclick="addIssue('${code}')">+ Registrar apontamento</button>
+        </div>
+      ` : `
+        <div class="issues-wrap" id="issues_${code}"></div>
+        <div class="add-issue-bar">
+          <button class="btn btn-add" onclick="addIssue('${code}')">+ Adicionar apontamento</button>
+          ${apt.issues.length===0 ? `<button class="btn" onclick="resetApt('${code}')">desfazer vistoria</button>` : ''}
+        </div>
+      `}
+    </div>
+  `;
+
+  if(apt.visited){
+    const wrap = card.querySelector(`#issues_${code}`);
+    apt.issues.forEach((issue, idx)=>{
+      wrap.appendChild(buildIssueRow(code, issue, idx));
+    });
+  }
+  return card;
+}
+
+function buildIssueRow(code, issue, idx){
+  const row = document.createElement('div');
+  row.className = 'issue-row' + (issue.completed ? ' is-done' : '');
+  row.id = 'row_'+issue.id;
+  row.innerHTML = `
+    <div class="issue-top">
+      <div class="issue-meta">
+        <span class="issue-num">APONTAMENTO ${idx+1}</span>
+        <select class="status-select" data-code="${code}" data-issue="${issue.id}">
+          <option value="atencao" ${issue.severity==='atencao'?'selected':''}>Atenção</option>
+          <option value="nao_conforme" ${issue.severity==='nao_conforme'?'selected':''}>Não conforme</option>
+        </select>
+      </div>
+      <div class="issue-desc">
+        <textarea class="desc-input" data-code="${code}" data-issue="${issue.id}" placeholder="Descreva o problema encontrado...">${issue.desc||""}</textarea>
+      </div>
+      <button class="remove-issue" title="Remover apontamento" onclick="removeIssue('${code}','${issue.id}')">×</button>
+    </div>
+    <div class="issue-bottom">
+      <div class="photo-cell">
+        <span class="photo-cell-label">Foto do problema</span>
+        <div class="img-cell">
+          <img class="img-preview ${issue.img?'has-img':''}" id="img_${issue.id}" src="${issue.img||''}">
+          <input type="file" accept="image/*" id="file_${issue.id}" style="display:none;" onchange="handleImage('${code}','${issue.id}', this)">
+          <button class="img-btn" onclick="document.getElementById('file_${issue.id}').click()">${issue.img?'trocar':'+ foto'}</button>
+        </div>
+      </div>
+      <div class="photo-cell">
+        <span class="photo-cell-label">Foto do resultado final</span>
+        <div class="img-cell">
+          <img class="img-preview ${issue.resultImg?'has-img':''}" id="imgResult_${issue.id}" src="${issue.resultImg||''}">
+          <input type="file" accept="image/*" id="fileResult_${issue.id}" style="display:none;" onchange="handleResultImage('${code}','${issue.id}', this)">
+          <button class="img-btn final" onclick="document.getElementById('fileResult_${issue.id}').click()">${issue.resultImg?'trocar':'+ foto'}</button>
+        </div>
+      </div>
+      <label class="done-toggle ${issue.completed?'checked':''}" id="doneLabel_${issue.id}">
+        <input type="checkbox" id="doneCheck_${issue.id}" ${issue.completed?'checked':''} onchange="toggleDone('${code}','${issue.id}', this.checked)">
+        ${issue.completed ? '<span class="done-badge">✓ concluído</span>' : 'marcar como concluído'}
+      </label>
+      <div class="issue-actions">
+        <span class="save-confirm" id="saveConfirm_${issue.id}">salvo ✓</span>
+        <button class="btn-save-issue" onclick="saveIssueNow('${code}','${issue.id}')">💾 Salvar apontamento</button>
+      </div>
+    </div>
+  `;
+  row.querySelector('.status-select').addEventListener('change', (e)=>{
+    issue.severity = e.target.value;
+    touchApt(code);
+    renderStats(); renderElevation(); refreshCardBadge(code);
+    scheduleSave();
+  });
+  row.querySelector('.desc-input').addEventListener('input', (e)=>{
+    issue.desc = e.target.value;
+    touchApt(code);
+    scheduleSave();
+  });
+  return row;
+}
+
+function toggleDone(code, issueId, checked){
+  const apt = ensureApt(code);
+  const issue = apt.issues.find(i=>i.id===issueId);
+  if(!issue) return;
+  issue.completed = checked;
+  issue.completedAt = checked ? new Date().toISOString() : null;
+  touchApt(code);
+  const label = document.getElementById('doneLabel_'+issueId);
+  const row = document.getElementById('row_'+issueId);
+  if(label){
+    label.classList.toggle('checked', checked);
+    const textNode = label.childNodes[label.childNodes.length-1];
+    label.innerHTML = `<input type="checkbox" id="doneCheck_${issueId}" ${checked?'checked':''} onchange="toggleDone('${code}','${issueId}', this.checked)">${checked ? '<span class="done-badge">✓ concluído</span>' : 'marcar como concluído'}`;
+  }
+  if(row) row.classList.toggle('is-done', checked);
+  refreshCardBadge(code);
+  renderHeaderCounts();
+  scheduleSave();
+}
+window.toggleDone = toggleDone;
+
+function handleResultImage(code, issueId, input){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (e)=>{
+    const img = new Image();
+    img.onload = ()=>{
+      const maxW = 320;
+      const scale = Math.min(1, maxW/img.width);
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width*scale;
+      canvas.height = img.height*scale;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img,0,0,canvas.width,canvas.height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+      const apt = ensureApt(code);
+      const issue = apt.issues.find(i=>i.id===issueId);
+      if(issue){ issue.resultImg = dataUrl; }
+      touchApt(code);
+      const preview = document.getElementById('imgResult_'+issueId);
+      if(preview){ preview.src = dataUrl; preview.classList.add('has-img'); }
+      const btn = preview ? preview.parentElement.querySelector('.img-btn') : null;
+      if(btn) btn.textContent = 'trocar';
+      scheduleSave();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+window.handleResultImage = handleResultImage;
+
+function saveIssueNow(code, issueId){
+  touchApt(code);
+  scheduleSave(true);
+  const el = document.getElementById('saveConfirm_'+issueId);
+  if(el){
+    el.classList.add('show');
+    setTimeout(()=>el.classList.remove('show'), 1800);
+  }
+}
+window.saveIssueNow = saveIssueNow;
+
+function touchApt(code){
+  const apt = ensureApt(code);
+  apt.updatedAt = new Date().toISOString();
+}
+
+function refreshCardBadge(code){
+  const apt = getApt(code);
+  const st = deriveStatus(apt);
+  const card = document.getElementById('card_'+code);
+  if(!card) return;
+  const badge = card.querySelector('.apt-status-badge');
+  badge.style.background = STATUS[st].bg;
+  badge.style.color = STATUS[st].text;
+  badge.querySelector('.status-badge-dot').style.background = STATUS[st].color;
+  const countEl = card.querySelector('.apt-issue-count');
+  const openIssues = apt.issues.filter(i=>!i.completed).length;
+  const doneIssues = apt.issues.length - openIssues;
+  countEl.textContent = apt.issues.length ? `${apt.issues.length} apontamento${apt.issues.length>1?'s':''}${doneIssues?` · ${doneIssues} concluído${doneIssues>1?'s':''}`:''}` : (apt.visited ? 'sem apontamentos' : 'pendente');
+}
+
+function markConforme(code){
+  const apt = ensureApt(code);
+  apt.visited = true;
+  apt.issues = [];
+  touchApt(code);
+  rerenderCard(code);
+  renderStats(); renderElevation();
+  scheduleSave();
+}
+window.markConforme = markConforme;
+
+function resetApt(code){
+  delete DATA.apartments[code];
+  rerenderCard(code);
+  renderStats(); renderElevation();
+  scheduleSave();
+}
+window.resetApt = resetApt;
+
+function addIssue(code){
+  const apt = ensureApt(code);
+  apt.visited = true;
+  apt.issues.push({id:cryptoId(), severity:'atencao', desc:'', img:null, completed:false, resultImg:null, completedAt:null, createdAt:new Date().toISOString()});
+  touchApt(code);
+  collapsedSet.delete(code);
+  rerenderCard(code);
+  renderStats(); renderElevation();
+  scheduleSave();
+}
+window.addIssue = addIssue;
+
+function removeIssue(code, issueId){
+  const apt = ensureApt(code);
+  apt.issues = apt.issues.filter(i=>i.id!==issueId);
+  touchApt(code);
+  rerenderCard(code);
+  renderStats(); renderElevation();
+  scheduleSave();
+}
+window.removeIssue = removeIssue;
+
+function toggleCard(code){
+  if(collapsedSet.has(code)) collapsedSet.delete(code); else collapsedSet.add(code);
+  document.getElementById('card_'+code).classList.toggle('collapsed');
+}
+window.toggleCard = toggleCard;
+
+function rerenderCard(code){
+  const old = document.getElementById('card_'+code);
+  if(!old) return;
+  const fresh = buildAptCard(code);
+  old.replaceWith(fresh);
+  const sub = document.getElementById('floorSubtitle');
+  if(currentFloor!==null){
+    const {counts} = floorCounts(currentFloor);
+    const codes = FLOORS[String(currentFloor)];
+    sub.textContent = `${codes.length} unidades · ${counts.conforme} conforme · ${counts.atencao} atenção · ${counts.nao_conforme} não conforme`;
+  }
+}
+
+function handleImage(code, issueId, input){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (e)=>{
+    const img = new Image();
+    img.onload = ()=>{
+      const maxW = 320;
+      const scale = Math.min(1, maxW/img.width);
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width*scale;
+      canvas.height = img.height*scale;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img,0,0,canvas.width,canvas.height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+      const apt = ensureApt(code);
+      const issue = apt.issues.find(i=>i.id===issueId);
+      if(issue){ issue.img = dataUrl; }
+      touchApt(code);
+      const preview = document.getElementById('img_'+issueId);
+      if(preview){ preview.src = dataUrl; preview.classList.add('has-img'); }
+      const btn = preview ? preview.parentElement.querySelector('.img-btn') : null;
+      if(btn) btn.textContent = 'trocar';
+      scheduleSave();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+window.handleImage = handleImage;
+
+/* ============ META ============ */
+['metaBuilding','metaResp','metaDate'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', ()=>{
+    DATA.meta.building = document.getElementById('metaBuilding').value;
+    DATA.meta.resp = document.getElementById('metaResp').value;
+    DATA.meta.date = document.getElementById('metaDate').value;
+    scheduleSave();
+  });
+});
+
+function renderAll(){
+  renderStats();
+  renderElevation();
+  renderFloorDetail();
+}
+
+/* ============ RELATÓRIO PDF — APONTAMENTOS EM ABERTO ============ */
+async function generateOpenReport(){
+  const btn = document.getElementById('pdfBtn');
+  const openIssues = getOpenIssues();
+  if(openIssues.length===0){
+    alert('Não há apontamentos em aberto no momento. Tudo concluído! ✓');
+    return;
+  }
+  btn.disabled = true;
+  const originalLabel = btn.textContent;
+  btn.textContent = 'gerando pdf...';
+
+  try{
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({unit:'pt', format:'a4'});
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const marginX = 40;
+    let y = 50;
+
+    const brand = [44,126,80];
+    const ink = [22,36,59];
+    const grey = [110,119,134];
+    const warn = [200,132,26];
+    const bad = [194,59,59];
+
+    function newPageIfNeeded(extra){
+      if(y + extra > pageH - 50){
+        doc.addPage();
+        y = 50;
+        drawPageHeader();
+      }
+    }
+    function drawPageHeader(){
+      doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.setTextColor(...brand);
+      doc.text('BE GARDEN', marginX, y);
+      doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...grey);
+      doc.text('Relatório de Apontamentos em Aberto', marginX, y+14);
+      doc.setDrawColor(...brand); doc.setLineWidth(1.2);
+      doc.line(marginX, y+22, pageW-marginX, y+22);
+      y += 38;
+      doc.setTextColor(...ink);
+    }
+
+    drawPageHeader();
+
+    doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(...grey);
+    const building = DATA.meta.building || '—';
+    const resp = DATA.meta.resp || '—';
+    const dateGen = new Date().toLocaleDateString('pt-BR');
+    doc.text(`Empreendimento: ${building}`, marginX, y);
+    doc.text(`Responsável: ${resp}`, marginX, y+13);
+    doc.text(`Emitido em: ${dateGen}`, marginX, y+26);
+    doc.text(`Total de apontamentos em aberto: ${openIssues.length}`, marginX, y+39);
+    y += 56;
+
+    let currentFloorPrinted = null;
+    let currentAptPrinted = null;
+
+    for(const item of openIssues){
+      const {floor, code, issue} = item;
+      newPageIfNeeded(70);
+
+      if(currentFloorPrinted !== floor){
+        currentFloorPrinted = floor;
+        currentAptPrinted = null;
+        doc.setFillColor(237,234,224);
+        doc.rect(marginX, y-11, pageW-marginX*2, 18, 'F');
+        doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(...ink);
+        doc.text(`PAVIMENTO ${String(floor).padStart(2,'0')}`, marginX+6, y+2);
+        y += 22;
+      }
+
+      if(currentAptPrinted !== code){
+        currentAptPrinted = code;
+        doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(...ink);
+        doc.text(`Unidade ${code}`, marginX, y);
+        y += 14;
+      }
+
+      const sevColor = issue.severity==='nao_conforme' ? bad : warn;
+      const sevLabel = issue.severity==='nao_conforme' ? 'NÃO CONFORME' : 'ATENÇÃO';
+      doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor(...sevColor);
+      doc.text(`● ${sevLabel}`, marginX+10, y);
+      y += 12;
+
+      doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(...ink);
+      const descText = issue.desc && issue.desc.trim() ? issue.desc.trim() : '(sem descrição)';
+      const lines = doc.splitTextToSize(descText, pageW - marginX*2 - 90);
+      const textH = lines.length*11;
+      let imgH = 0;
+      let imgDrawn = false;
+      if(issue.img){
+        newPageIfNeeded(Math.max(textH,50)+14);
+        try{
+          doc.addImage(issue.img, 'JPEG', pageW-marginX-70, y-2, 70, 50);
+          imgDrawn = true; imgH = 54;
+        }catch(e){ /* ignora imagem inválida */ }
+      } else {
+        newPageIfNeeded(textH+14);
+      }
+      doc.text(lines, marginX+10, y);
+      y += Math.max(textH, imgDrawn?imgH:0) + 14;
+
+      doc.setDrawColor(229,229,229); doc.setLineWidth(.5);
+      doc.line(marginX+10, y-8, pageW-marginX, y-8);
+    }
+
+    const totalPages = doc.internal.getNumberOfPages();
+    for(let p=1; p<=totalPages; p++){
+      doc.setPage(p);
+      doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(...grey);
+      doc.text(`Página ${p} de ${totalPages}`, pageW-marginX-60, pageH-25);
+      doc.text('Be Garden · Checklist de Vistoria', marginX, pageH-25);
+    }
+
+    const fileBuilding = (DATA.meta.building||'apontamentos').replace(/[^a-z0-9]+/gi,'_').toLowerCase();
+    doc.save(`apontamentos-em-aberto_${fileBuilding}_${new Date().toISOString().slice(0,10)}.pdf`);
+  }catch(err){
+    alert('Não foi possível gerar o relatório. Tente novamente.');
+    console.error(err);
+  }finally{
+    btn.disabled = false;
+    btn.textContent = originalLabel;
+  }
+}
+window.generateOpenReport = generateOpenReport;
+
+loadAll();
+</script>
+</body>
+</html>
